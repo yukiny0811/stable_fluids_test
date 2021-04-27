@@ -30,7 +30,7 @@ void ofApp::diffuseFloat(float* current, float* prev, float diffusionAmount, flo
 }
 
 void ofApp::setBoundaryFloat(float* current, int side) {
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i <= 101; i++) {
         current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
         current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
         current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
@@ -43,16 +43,50 @@ void ofApp::setBoundaryFloat(float* current, int side) {
 }
 
 void ofApp::setBoundaryVec(ofVec2f* current, int side) {
-    for (int i = 0; i < 100; i++) {
-        current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
-        current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
-        current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
-        current[getPos(i, 100+1)] = side == 2 ? -current[getPos(i, 100)] : current[getPos(i, 100)];
+//    for (int i = 0; i < 100; i++) {
+//        current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
+//        current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
+//        current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
+//        current[getPos(i, 100+1)] = side == 2 ? -current[getPos(i, 100)] : current[getPos(i, 100)];
+//    }
+    if (side == 1) {
+        for (int i = 0; i <= 101; i++) {
+            current[getPos(0, i)].x = -current[getPos(1, i)].x;
+            current[getPos(100+1, i)].x = -current[getPos(100, i)].x;
+            current[getPos(i, 0)].x = current[getPos(i, 1)].x;
+            current[getPos(i, 100+1)].x = current[getPos(i, 100)].x;
+        }
+        current[getPos(0, 0)].x = 0.5 * (current[getPos(1, 0)].x + current[getPos(0, 1)].x);
+        current[getPos(0, 100+1)].x = 0.5 * (current[getPos(1, 100+1)].x + current[getPos(0, 100)].x);
+        current[getPos(100+1, 0)].x = 0.5 * (current[getPos(100, 0)].x + current[getPos(100+1, 1)].x);
+        current[getPos(100+1, 100+1)].x = 0.5 * (current[getPos(100, 100+1)].x + current[getPos(100+1, 100)].x);
+    } else if (side == 2) {
+        for (int i = 0; i <= 101; i++) {
+            current[getPos(0, i)].y = -current[getPos(1, i)].y;
+            current[getPos(100+1, i)].y = -current[getPos(100, i)].y;
+            current[getPos(i, 0)].y = current[getPos(i, 1)].y;
+            current[getPos(i, 100+1)].y = current[getPos(i, 100)].y;
+        }
+        current[getPos(0, 0)].y = 0.5 * (current[getPos(1, 0)].y + current[getPos(0, 1)].y);
+        current[getPos(0, 100+1)].y = 0.5 * (current[getPos(1, 100+1)].y + current[getPos(0, 100)].y);
+        current[getPos(100+1, 0)].y = 0.5 * (current[getPos(100, 0)].y + current[getPos(100+1, 1)].y);
+        current[getPos(100+1, 100+1)].y = 0.5 * (current[getPos(100, 100+1)].y + current[getPos(100+1, 100)].y);
+    } else {
+        for (int i = 0; i < 101; i++) {
+            current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
+            current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
+            current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
+            current[getPos(i, 100+1)] = side == 2 ? -current[getPos(i, 100)] : current[getPos(i, 100)];
+        }
+        current[getPos(0, 0)] = 0.5 * (current[getPos(1, 0)] + current[getPos(0, 1)]);
+        current[getPos(0, 100+1)] = 0.5 * (current[getPos(1, 100+1)] + current[getPos(0, 100)]);
+        current[getPos(100+1, 0)] = 0.5 * (current[getPos(100, 0)] + current[getPos(100+1, 1)]);
+        current[getPos(100+1, 100+1)] = 0.5 * (current[getPos(100, 100+1)] + current[getPos(100+1, 100)]);
     }
-    current[getPos(0, 0)] = 0.5 * (current[getPos(1, 0)] + current[getPos(0, 1)]);
-    current[getPos(0, 100+1)] = 0.5 * (current[getPos(1, 100+1)] + current[getPos(0, 100)]);
-    current[getPos(100+1, 0)] = 0.5 * (current[getPos(100, 0)] + current[getPos(100+1, 1)]);
-    current[getPos(100+1, 100+1)] = 0.5 * (current[getPos(100, 100+1)] + current[getPos(100+1, 100)]);
+//    current[getPos(0, 0)] = 0.5 * (current[getPos(1, 0)] + current[getPos(0, 1)]);
+//    current[getPos(0, 100+1)] = 0.5 * (current[getPos(1, 100+1)] + current[getPos(0, 100)]);
+//    current[getPos(100+1, 0)] = 0.5 * (current[getPos(100, 0)] + current[getPos(100+1, 1)]);
+//    current[getPos(100+1, 100+1)] = 0.5 * (current[getPos(100, 100+1)] + current[getPos(100+1, 100)]);
 }
 void ofApp::densityStep() {
     addSourceFloat(density, prev_density, dt);
@@ -67,11 +101,11 @@ void ofApp::velocityStep() {
     swap(velocity, prev_velocity);
     diffuseVec(velocity, prev_velocity, diffusion, dt);
     //project
-//    project(velocity, prev_velocity);
-//    swap(velocity, prev_velocity);
-//    advectVel(velocity, prev_velocity, dt);
+    project(velocity, prev_velocity);
+    swap(velocity, prev_velocity);
+    advectVel(velocity, prev_velocity, dt);
     //project
-//    project(velocity, prev_velocity);
+    project(velocity, prev_velocity);
     
 }
 
@@ -98,23 +132,23 @@ void ofApp::advect(float* currentDensity, float* prevDensity, ofVec2f* currentVe
     float dt0 = dt * 100;
     for (int x = 1; x < 101; x++) {
         for (int y = 1; y < 101; y++) {
-            float tempX = x - dt0 * currentVelocity[getPos(x, y)].x;
-            float tempY = y - dt0 * currentVelocity[getPos(x, y)].y;
+            float tempX = (float)x - dt0 * currentVelocity[getPos(x, y)].x;
+            float tempY = (float)y - dt0 * currentVelocity[getPos(x, y)].y;
             
             if (tempX < 0.5) tempX = 0.5;
-            if (tempX > 100 + 0.5) tempX = 100 + 0.5;
+            if (tempX > 100 + 0.5) tempX = 100.0 + 0.5;
             int x0 = tempX;
             int x1 = x0 + 1;
             
             if (tempY < 0.5) tempY = 0.5;
-            if (tempY > 100 + 0.5) tempY = 100 + 0.5;
+            if (tempY > 100 + 0.5) tempY = 100.0 + 0.5;
             int y0 = tempY;
             int y1 = y0 + 1;
             
-            float s1 = tempX - x0;
-            float s0 = 1 - s1;
-            float t1 = tempY - y0;
-            float t0 = 1 - t1;
+            float s1 = tempX - (float)x0;
+            float s0 = 1.0 - s1;
+            float t1 = tempY - (float)y0;
+            float t0 = 1.0 - t1;
             
             currentDensity[getPos(x, y)] =
             s0 * (t0 * prevDensity[getPos(x0, y0)] + t1 * prevDensity[getPos(x0, y1)]) +
@@ -127,8 +161,8 @@ void ofApp::advectVel(ofVec2f* currentVelocity, ofVec2f* prevVelocity, float dt)
     float dt0 = dt * 100;
     for (int x = 1; x < 101; x++) {
         for (int y = 1; y < 101; y++) {
-            float tempX = x - dt0 * prevVelocity[getPos(x, y)].x;
-            float tempY = y - dt0 * prevVelocity[getPos(x, y)].y;
+            float tempX = (float)x - dt0 * prevVelocity[getPos(x, y)].x;
+            float tempY = (float)y - dt0 * prevVelocity[getPos(x, y)].y;
             
             if (tempX < 0.5) tempX = 0.5;
             if (tempX > 100 + 0.5) tempX = 100 + 0.5;
@@ -140,10 +174,10 @@ void ofApp::advectVel(ofVec2f* currentVelocity, ofVec2f* prevVelocity, float dt)
             int y0 = tempY;
             int y1 = y0 + 1;
             
-            float s1 = tempX - x0;
-            float s0 = 1 - s1;
-            float t1 = tempY - y0;
-            float t0 = 1 - t1;
+            float s1 = tempX - (float)x0;
+            float s0 = 1.0 - s1;
+            float t1 = tempY - (float)y0;
+            float t0 = 1.0 - t1;
             
             currentVelocity[getPos(x, y)].x =
             s0 * (t0 * prevVelocity[getPos(x0, y0)].x + t1 * prevVelocity[getPos(x0, y1)].x) +
@@ -219,7 +253,7 @@ void ofApp::get_from_ui() {
             }
         }
     }
-    prev_velocity[index] = ofVec2f(((float)ofGetMouseX() - (float)ofGetPreviousMouseX()) * 100, ((float)ofGetMouseY() - (float)ofGetPreviousMouseY()) * 100);
+    prev_velocity[index] = ofVec2f(((float)ofGetMouseX() - (float)ofGetPreviousMouseX()) * 1000, ((float)ofGetMouseY() - (float)ofGetPreviousMouseY()) * 1000);
     
     
     
@@ -344,36 +378,38 @@ void ofApp::drawDensity() {
 }
 
 void ofApp::project(ofVec2f* currentVelocity, ofVec2f* prevVelocity) {
-//    float h = 1 / 100;
-//    for (int x = 1; x < 101; x++) {
-//        for (int y = 1; y < 101; y++) {
-//            prevVelocity[getPos(x, y)].y = -0.5 * h * (currentVelocity[getPos(x+1, y)].x -
-//                                                       currentVelocity[getPos(x-1, y)].x +
-//                                                       currentVelocity[getPos(x, y+1)].y +
-//                                                       currentVelocity[getPos(x, y-1)].y);
-//            prevVelocity[getPos(x, y)].x = 0;
-//        }
-//    }
-//    setBoundaryVec(prevVelocity, 0);
-//
-//    for (int k = 0; k < 20; k++) {
-//        for (int x = 1; x < 101; x++) {
-//            for (int y = 1; y < 101; y++) {
-//                prevVelocity[getPos(x, y)].x =  (prevVelocity[getPos(x, y)].y +
-//                                                 prevVelocity[getPos(x-1, y)].x +
-//                                                 prevVelocity[getPos(x+1, y)].x +
-//                                                 prevVelocity[getPos(x, y-1)].x +
-//                                                 prevVelocity[getPos(x, y+1)].x) / 4;
-//            }
-//        }
-//        setBoundaryVec(prevVelocity, 0);
-//    }
-//    for (int x = 1; x < 101; x++) {
-//        for (int y = 1; y < 101; y++) {
-//            currentVelocity[getPos(x, y)].x -= 0.5 * (prevVelocity[getPos(x+1, y)].x - prevVelocity[getPos(x-1, y)].x) / h;
-//            currentVelocity[getPos(x, y)].y -= 0.5 * (prevVelocity[getPos(x, y+1)].x - prevVelocity[getPos(x, y-1)].x) / h;
-//        }
-//    }
+    float h = 1.0 / 100;
+    for (int x = 1; x < 101; x++) {
+        for (int y = 1; y < 101; y++) {
+            prevVelocity[getPos(x, y)].y = -0.5 * h * (currentVelocity[getPos(x+1, y)].x -
+                                                       currentVelocity[getPos(x-1, y)].x +
+                                                       currentVelocity[getPos(x, y+1)].y -
+                                                       currentVelocity[getPos(x, y-1)].y);
+            prevVelocity[getPos(x, y)].x = 0;
+        }
+    }
+    setBoundaryVec(prevVelocity, 0);
+
+    for (int k = 0; k < 20; k++) {
+        for (int x = 1; x < 101; x++) {
+            for (int y = 1; y < 101; y++) {
+                prevVelocity[getPos(x, y)].x =  (prevVelocity[getPos(x, y)].y +
+                                                 prevVelocity[getPos(x-1, y)].x +
+                                                 prevVelocity[getPos(x+1, y)].x +
+                                                 prevVelocity[getPos(x, y-1)].x +
+                                                 prevVelocity[getPos(x, y+1)].x) / 4.0;
+            }
+        }
+        setBoundaryVec(prevVelocity, 0);
+    }
+    for (int x = 1; x < 101; x++) {
+        for (int y = 1; y < 101; y++) {
+            currentVelocity[getPos(x, y)].x -= 0.5 * (prevVelocity[getPos(x+1, y)].x - prevVelocity[getPos(x-1, y)].x) / h;
+            currentVelocity[getPos(x, y)].y -= 0.5 * (prevVelocity[getPos(x, y+1)].x - prevVelocity[getPos(x, y-1)].x) / h;
+        }
+    }
+    setBoundaryVec(currentVelocity, 1);
+    setBoundaryVec(currentVelocity, 2);
 //    setBoundaryVec(currentVelocity, 0);
     
 }
