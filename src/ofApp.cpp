@@ -30,7 +30,7 @@ void ofApp::diffuseFloat(float* current, float* prev, float diffusionAmount, flo
 }
 
 void ofApp::setBoundaryFloat(float* current, int side) {
-    for (int i = 0; i <= 101; i++) {
+    for (int i = 1; i < 101; i++) {
         current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
         current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
         current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
@@ -50,7 +50,7 @@ void ofApp::setBoundaryVec(ofVec2f* current, int side) {
 //        current[getPos(i, 100+1)] = side == 2 ? -current[getPos(i, 100)] : current[getPos(i, 100)];
 //    }
     if (side == 1) {
-        for (int i = 0; i <= 101; i++) {
+        for (int i = 1; i < 101; i++) {
             current[getPos(0, i)].x = -current[getPos(1, i)].x;
             current[getPos(100+1, i)].x = -current[getPos(100, i)].x;
             current[getPos(i, 0)].x = current[getPos(i, 1)].x;
@@ -61,18 +61,18 @@ void ofApp::setBoundaryVec(ofVec2f* current, int side) {
         current[getPos(100+1, 0)].x = 0.5 * (current[getPos(100, 0)].x + current[getPos(100+1, 1)].x);
         current[getPos(100+1, 100+1)].x = 0.5 * (current[getPos(100, 100+1)].x + current[getPos(100+1, 100)].x);
     } else if (side == 2) {
-        for (int i = 0; i <= 101; i++) {
-            current[getPos(0, i)].y = -current[getPos(1, i)].y;
-            current[getPos(100+1, i)].y = -current[getPos(100, i)].y;
-            current[getPos(i, 0)].y = current[getPos(i, 1)].y;
-            current[getPos(i, 100+1)].y = current[getPos(i, 100)].y;
+        for (int i = 1; i < 101; i++) {
+            current[getPos(0, i)].y = current[getPos(1, i)].y;
+            current[getPos(100+1, i)].y = current[getPos(100, i)].y;
+            current[getPos(i, 0)].y = -current[getPos(i, 1)].y;
+            current[getPos(i, 100+1)].y = -current[getPos(i, 100)].y;
         }
         current[getPos(0, 0)].y = 0.5 * (current[getPos(1, 0)].y + current[getPos(0, 1)].y);
         current[getPos(0, 100+1)].y = 0.5 * (current[getPos(1, 100+1)].y + current[getPos(0, 100)].y);
         current[getPos(100+1, 0)].y = 0.5 * (current[getPos(100, 0)].y + current[getPos(100+1, 1)].y);
         current[getPos(100+1, 100+1)].y = 0.5 * (current[getPos(100, 100+1)].y + current[getPos(100+1, 100)].y);
     } else {
-        for (int i = 0; i < 101; i++) {
+        for (int i = 1; i < 101; i++) {
             current[getPos(0, i)] = side == 1 ? -current[getPos(1, i)] : current[getPos(1, i)];
             current[getPos(100+1, i)] = side == 1 ? -current[getPos(100, i)] : current[getPos(100, i)];
             current[getPos(i, 0)] = side == 2 ? -current[getPos(i, 1)] : current[getPos(i, 1)];
@@ -124,7 +124,8 @@ void ofApp::diffuseVec(ofVec2f* current, ofVec2f* prev, float diffusionAmount, f
                                          ) / (1 + 4*amount);
             }
         }
-        setBoundaryVec(current, 0);
+        setBoundaryVec(current, 1);
+        setBoundaryVec(current, 2);
     }
 }
 
@@ -187,7 +188,8 @@ void ofApp::advectVel(ofVec2f* currentVelocity, ofVec2f* prevVelocity, float dt)
             s1 * (t0 * prevVelocity[getPos(x1, y0)].y + t1 * prevVelocity[getPos(x1, y1)].y);
         }
     }
-    setBoundaryVec(currentVelocity, 0);
+    setBoundaryVec(currentVelocity, 1);
+    setBoundaryVec(currentVelocity, 2);
 }
 
 //--------------------------------------------------------------
@@ -260,7 +262,8 @@ void ofApp::get_from_ui() {
 }
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
+    ofSetColor(0, 0, 0, 0);
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     drawDensity();
     drawVelocity();
     
@@ -371,7 +374,7 @@ void ofApp::drawDensity() {
 //    printf("%f", density[getPos(20, 20)]);
     for (int y = 0; y < NUM / (cellSize * cellSize); y++) {
         for (int x = 0; x < NUM / (cellSize * cellSize); x++) {
-            ofSetColor(density[getPos(x, y)] * 255, 50, 50);
+            ofSetColor(density[getPos(x, y)] * 150, density[getPos(x, y)] * 200,density[getPos(x, y)] * 255);
             ofDrawRectangle(x * cellSize, y * cellSize, cellSize, cellSize);
         }
     }
@@ -422,7 +425,7 @@ void ofApp::project(ofVec2f* currentVelocity, ofVec2f* prevVelocity) {
 //}
 
 void ofApp::drawVelocity() {
-    ofSetColor(0, 255, 0, 100);
+    ofSetColor(255, 255, 255, 50);
     for (int y = 0; y < 100; y++) {
         for(int x = 0; x < 100; x++) {
             ofDrawLine(x * cellSize + cellSize/2,
@@ -431,8 +434,6 @@ void ofApp::drawVelocity() {
                        y * cellSize + cellSize / 2 + velocity[getPos(x, y)].y * 50);
         }
     }
-    
-    printf("%f,%f\n", velocity[getPos(50, 50)].x,velocity[getPos(50, 50)].y);
 }
 
 //void ofApp::project() {
