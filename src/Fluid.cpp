@@ -225,8 +225,8 @@ void Fluid::drawDensity() {
 //速度を描画
 void Fluid::drawVelocity() {
     ofSetColor(255, 255, 255, 50);
-    for (int y = 0; y < 100; y++) {
-        for(int x = 0; x < 100; x++) {
+    for (int y = 0; y < 102; y++) {
+        for(int x = 0; x < 102; x++) {
             ofDrawLine(x * cellSize + cellSize/2,
                        y * cellSize + cellSize / 2,
                        x * cellSize + cellSize/2 + velocity[getPos(x, y)].x * 50,
@@ -276,7 +276,7 @@ void Fluid::get_from_ui() {
             for (int tx = -inputSize; tx < inputSize; tx++) {
                 if (!(x + tx > 100 || x + tx < 0)) {
                     if (!(y + ty > 100 || y + ty < 0)) {
-                        density[getPos(x + tx, y+ty)] = 1;
+                        prev_density[getPos(x + tx, y+ty)] = 10;
                     }
                 }
             }
@@ -286,7 +286,7 @@ void Fluid::get_from_ui() {
             for (int tx = -inputSize; tx < inputSize; tx++) {
                 if (!(x + tx > 100 || x + tx < 0)) {
                     if (!(y + ty > 100 || y + ty < 0)) {
-                        density[getPos(x + tx, y+ty)] = 0;
+                        prev_density[getPos(x + tx, y+ty)] = -10;
                     }
                 }
             }
